@@ -1,36 +1,34 @@
 package pro.sky.swagger.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.sky.swagger.model.Faculty;
-
-
-import java.util.HashMap;
+import pro.sky.swagger.repository.FacultyRepository;
 
 @Service
 public  class FacultyServiceImp implements FacultyService {
 
-    private final HashMap<Long, Faculty> faculties = new HashMap<>();
-    private long count = 0;
+    @Autowired
+    private final FacultyRepository facultyRepository;
+
+    public FacultyServiceImp(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
+
 
     public Faculty addFaculty(Faculty faculty) {
-        faculty.setId(count++);
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty findFaculty(long id) {
-        return faculties.get(id);
+        return facultyRepository.findById(id).get();
     }
 
     public Faculty editFaculty(long id ,Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())) {
-            return null;
-        }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public void deleteFaculty(long id) {
-        faculties.remove(id);
+        facultyRepository.deleteById(id);
     }
 }
